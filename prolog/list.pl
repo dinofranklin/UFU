@@ -306,4 +306,19 @@ swap(P1,P2,[X|Y],L1):-
     swapnth(E1,P2,[X|Y],L),
     swapnth(E2,P1,L,L1).
 
+%Rules to permute a list.
+insert(X,[],[X]):-!.
+
+insert(X,[Y|Z],L):-
+    L = [X,Y|Z].
+
+insert(X,[Y|Z],L):-
+    insert(X,Z,L1),
+    L = [Y|L1].
+
+permute([],[]).
+
+permute([X|Y],L):-
+    permute(Y,L1),
+    insert(X,L1,L).
 
