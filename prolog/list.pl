@@ -302,3 +302,60 @@ permute([X|Y],L):-
     permute(Y,L1),
     insert(X,L1,L).
 
+%Rules to find the sum of all elements in a list.
+sum([],0):-!.
+
+sum([X],X):-!.
+
+sum([X|Y],Z):-
+    sum(Y,R),
+    Z is X + R.
+
+%Rules to find the average of all elements in a list.
+average([],0):-!.
+
+average([X],X):-!.
+
+average([X|Y],Z):-
+    sum([X|Y],S),
+    listlen([X|Y],L),
+    Z is S/L.
+    
+%Rules to find the median of a list.
+median([X],X):-!.
+
+median([X|Y],N):-
+    listlen([X|Y],L),
+    mod(L,2) =:= 0,!,
+    L1 is L/2, L2 is L/2 + 1,
+    nth([X|Y],L1,N1),
+    nth([X|Y],L2,N2),
+    N is (N1+N2)/2.
+
+median([X|Y],N):-
+    listlen([X|Y],L),
+    L1 is L//2 + 1,
+    nth([X|Y],L1,N).
+
+%Rules to count the number of occurrences of an element in a list.
+count(_,[],0):-!.
+
+count(X,[X|Z],N):-
+    !,count(X,Z,N1),
+    N is N1 + 1.
+
+count(X,[_|Z],N):-
+    count(X,Z,N).
+
+%Rules to find the mode of a list.
+
+mode([X],X):-!.
+
+mode([X|Y],R):-
+    mode(Y,R),
+    count(X,[X|Y],A1),
+    count(R,[X|Y],A2),
+    A2 >= A1,!.
+
+mode([X|_],X).
+
