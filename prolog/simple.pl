@@ -58,12 +58,34 @@ ntdiv(X,C,Ac,R):-
     C1 is C + 1,
     ntdiv(X,C1,Ac1,R).
 
+%Rules to find the Greatest Commom Divisor between two numbers.
+gcd(X,Y,Y):-
+    X \= 0, Y \= 0,
+    N is mod(X,Y),
+    N =:= 0,!.
 
+gcd(X,Y,Z):-
+    X \= 0, Y \= 0,
+    N is mod(X,Y),
+    gcd(Y,N,Z).
 
+%Rule to find the Least Commom Multiplier between two numbers.
+lcm(X,Y,N):-
+    X \= 0, Y \= 0,
+    gcd(X,Y,R),
+    N is (X*Y)/R.
 
+%Rules to print the collatz sequence of a number.
+collatz(1):-
+    !,write(1).
 
+collatz(X):-
+    write(X),write(" "),
+    N is mod(X,2),
+    N =:= 0,!,
+    X1 is X/2,
+    collatz(X1).
 
-
-
-
-
+collatz(X):-
+    X1 is X*3 + 1,
+    collatz(X1).
