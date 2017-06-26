@@ -79,44 +79,24 @@ removerep([X|Y],L):-
     L = [X|L2].
 
 %Rules to find the biggest element in a list.
-max(X,Y,R):-
-    X >= Y, !,
-    R = X.
 
-max(X,Y,R):-
-    Y > X,
-    R = Y.
+listmax([X],X):-!.
 
-maxlist([],M,M):-!.
+listmax([X|Y],A):-
+    listmax(Y,A),
+    A >= X,!.
 
-maxlist([X|Y],M,R):-
-    max(X,M,R1),
-    maxlist(Y,R1,R).
-
-findmax([X],X):-!.
-
-findmax([X|Y],R):-
-    maxlist(Y,X,R).
+listmax([X|_],X).
 
 %Rules to find the smaller element in a list.
-min(X,Y,R):-
-    X =< Y, !,
-    R = X.
 
-min(X,Y,R):-
-    Y < X,
-    R = Y.
+listmin([X],X):-!.
 
-minlist([],M,M):-!.
+listmin([X|Y],A):-
+    listmin(Y,A),
+    A =< X,!.
 
-minlist([X|Y],M,R):-
-    min(X,M,R1),
-    minlist(Y,R1,R).
-
-findmin([X],X):-!.
-
-findmin([X|Y],R):-
-    minlist(Y,X,R).
+listmin([X|_],X).
 
 %Rule to take elements from a list and put them in another list.
 takepos([],_,[]):-!.
