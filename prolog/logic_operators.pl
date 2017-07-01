@@ -1,7 +1,7 @@
 %Using prolog operators to make logic operators.
 
 %Operator not("!").
-:-op(20,fx,!).
+:-op(20,fy,!).
 %Operator if then("=>").
 :-op(100,xfy,=>).
 %Operator if and only if("<=>").
