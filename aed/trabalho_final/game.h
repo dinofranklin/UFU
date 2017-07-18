@@ -7,7 +7,7 @@
 
 void make_map(List **l, char *orig, char *dest);
 
-void bfs(List **map, int seen[], int beg);
+void dfs(List **map, int seen[], int beg);
 
 int verify_map(List **map, char orig, char dest);
 
