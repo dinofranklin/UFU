@@ -31,14 +31,14 @@ void make_map(List **map, char *orig, char *dest){
     return;
 }
 
-void bfs(List **map, int seen[], int beg){
+void dfs(List **map, int seen[], int beg){
     int i, t, size;
     ++seen[beg];
     size = list_size(map[beg]);
     for(i = 0; i < size; ++i){
         t = list_position(map[beg], i+1) - 'A';
         if(!seen[t]){
-            bfs(map, seen, t);
+            dfs(map, seen, t);
         }
     }
     return;
@@ -50,7 +50,7 @@ int verify_map(List **map, char orig, char dest){
     for(i = 0; i < LSIZE; ++i){
         seen[i] = 0;
     }
-    bfs(map, seen, orig-'A');
+    dfs(map, seen, orig-'A');
     if(!seen[dest-'A'] || orig == dest){
         printf("Erro: Seu mapa nao e valido!\n");
         printf("Digite uma mapa valido:\n");
