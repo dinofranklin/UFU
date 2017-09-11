@@ -198,7 +198,8 @@ type Line_Points = (Point,Point)
 --The make_line function takes two points and returns the
 --line (value) formed by them.
 make_line :: Point->Point->Line_Values
-make_line (xa,ya) (xb,yb) = 
+make_line (xa,ya) (xb,yb) = (m,m*(-xb)+yb)
+        where m = (yb-ya)/(xb-xa)
 
 --The is_vertical function takes a line (2 points) and
 --returns true if the line is vertical and false if it is not.
@@ -217,4 +218,6 @@ is_horizontal ((xa,ya),(xb,yb)) =
 --The line_intersection function takes two lines and returns
 --the point of intersection.
 line_intersection :: Line_Values->Line_Values->Point
-line_intersection (a1,b1) (a2,b2) = 
+line_intersection (a1,b1) (a2,b2) = (x,y)
+    where x = (b1-b2)/(a2-a1)
+          y = b1 + a1*x
