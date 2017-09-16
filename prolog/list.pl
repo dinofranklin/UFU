@@ -458,12 +458,6 @@ listmin([X|Y],A):-
 
 listmin([X|_],X).
 
-%Rule to add an element to the tail of a list.
-addtail(X,[],[X]):-!.
-
-addtail(X,[Y|Z],[Y|L1]):-
-    addtail(X,Z,L1).
-
 %Rule to remove the first element of a list.
 removefirst([],[]).
 
