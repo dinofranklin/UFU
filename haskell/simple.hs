@@ -1,3 +1,5 @@
+--Simple functions using the Haskell language.
+
 --The double function finds the double of a number.
 double :: Int->Int
 double x = x*2
