@@ -458,14 +458,6 @@ listmin([X|Y],A):-
 
 listmin([X|_],X).
 
-%Rule to take elements from a list and put them in another list.
-takepos([],_,[]):-!.
-
-takepos([X|Y],L,R):-
-    nth(L,X,R1),
-    takepos(Y,L,R2),
-    R = [R1|R2].
-
 %Rule to add an element to the head of a list.
 addhead(X,[],[X]):-!.
 
