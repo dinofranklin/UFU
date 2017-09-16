@@ -49,56 +49,6 @@ nth([_|Y],N,R):-
     N > 0,
     N1 is N - 1,%Lists rules
 
-%Rule to concatenate lists.
-conc([],L,L).
-
-conc([X|Y],L,[X|R1]):-
-    conc(Y,L,R1).
-
-%Rule to invert a list.
-invert([],[]).
-
-invert([X|Y],R):-
-    invert(Y,R1),
-    conc(R1,[X],R).
-
-%Rules to sort a list.
-insort(X,[],[X]):- !.
-
-insort(X,[Y|Z],A):-
-    X =< Y,!,
-    A = [X,Y|Z].
-insort(X,[Y|Z],[Y|L1]):-
-    X > Y,!,
-    insort(X,Z,L1).
-
-sortlist([],[]):-!.
-
-sortlist([X|Y],R):-
-    sortlist(Y,L1),
-    insort(X,L1,R).
-
-%Rules to find the number of elements/length of list.
-len([],Ac,Ac).
-
-len([_|Y],Ac,R):-
-    Ac1 is Ac + 1,
-    len(Y,Ac1,R).
-
-listlen([],0):-!.
-
-listlen([X|Y],R):-
-    Ac = 0,
-    len([X|Y],Ac,R).
-
-%Rule to find the nth element of a list.
-nth([X|_],1,X):-!.
-
-nth([_|Y],N,R):-
-    N > 0,
-    N1 is N - 1,
-    nth(Y,N1,R).
-
 %Rule to remove the first occurrence of an element in a list.
 remove(_,[],[]):-!.
 
