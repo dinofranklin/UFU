@@ -458,11 +458,6 @@ listmin([X|Y],A):-
 
 listmin([X|_],X).
 
-%Rule to add an element to the head of a list.
-addhead(X,[],[X]):-!.
-
-addhead(X,[Y|Z],[X,Y|Z]).
-
 %Rule to add an element to the tail of a list.
 addtail(X,[],[X]):-!.
 
@@ -482,19 +477,6 @@ removelast([_],[]):-!.
 removelast([X|Y],L):-
     removelast(Y,L1),
     L = [X|L1].
-
-%Rule to add an element in the nth position of a list.
-addpos(X,1,[Y|Z],[X,Y|Z]):- !.
-
-addpos(X,P,[Y|Z],[Y|L1]):-
-    P1 is P-1,
-    addpos(X,P1,Z,L1).
-
-add_at(X,N,[Y|Z],L):-
-    listlen([Y|Z],Len),
-    N =< Len,
-    N > 0,
-    addpos(X,N,[Y|Z],L).
 
 %Rule to remove an element in the nth position of a list.
 removepos(N,N,[_|Y],Y):-!.
