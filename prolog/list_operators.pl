@@ -1,4 +1,5 @@
 %List rules using operators.
+%By: Abrothguer
 
 :-op(100,xfx,generates).
 :-op(100,xfx,iss).
@@ -347,11 +348,3 @@ X belongs to [_|Z]:-
 
 [X|W] equal to [X|Y]:-
     W equal to Y.
-
-
-
-
-
-
-
-
