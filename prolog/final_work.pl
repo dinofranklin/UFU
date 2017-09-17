@@ -1,3 +1,6 @@
+%Final work of Prolog discipline
+%By: Abrothguer
+
 inicio :-
 	menu,
 	write('Deseja realmente sair?'), nl,
@@ -155,7 +158,7 @@ hipotetiza(pinguim) :- pinguim, !.
 hipotetiza(albatroz) :- albatroz, !.
 hipotetiza(desconhecido). /* nao diagnosticado */
 
-/* regras de identificação do animal */
+/* regras de identificaÃ§Ã£o do animal */
 leopardo :-
 	mamifero,
 	carnivoro,
@@ -185,7 +188,7 @@ albatroz :-
 	verifica(aparece_em_estoria_de_marinheiro),
 	verifica(voa).
 
-/* regras de classificação */
+/* regras de classificaÃ§Ã£o */
 
 mamifero :-
 	verifica(tem_pelo), !.
