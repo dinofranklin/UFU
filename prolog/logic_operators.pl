@@ -1,4 +1,5 @@
 %Using prolog operators to make logic operators.
+%By: Abrothguer
 
 %Operator not("!").
 :-op(20,fy,!).
