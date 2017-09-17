@@ -1,4 +1,5 @@
 %Simple rules using Prolog.
+%By: Abrothguer
 
 %Rule to calculate Fibonacci.
 fib(1,1):-!.
