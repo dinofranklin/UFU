@@ -1,4 +1,5 @@
 %Usando operadores prolog.
+%By: Abrothguer
 
 :-op(100,xfx,eh).
 :-op(90,fx,um).
@@ -37,28 +38,19 @@ X salva Y :-
     X salva Z,
     Z salva Y.
 
-:-op(100,xfx,é).
+:-op(100,xfx,Ã©).
 :-op(80,fx,ancestral).
 :-op(80,fx,pai).
 :-op(50,fx,de).
 
-joao é pai de pedro.
-pedro é pai de jose.
-pedro é pai de ana.
-jose é pai de antonio.
-lucas é pai de joao.
+joao Ã© pai de pedro.
+pedro Ã© pai de jose.
+pedro Ã© pai de ana.
+jose Ã© pai de antonio.
+lucas Ã© pai de joao.
 
-X é ancestral de Y:-
-    X é pai de Y.
-X é ancestral de Y:-
-    X é pai de Z,
-    Z é ancestral de Y.
-
-
-
-
-
-
-
-
-
+X Ã© ancestral de Y:-
+    X Ã© pai de Y.
+X Ã© ancestral de Y:-
+    X Ã© pai de Z,
+    Z Ã© ancestral de Y.
