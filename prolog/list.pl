@@ -1,4 +1,5 @@
 %Lists rules
+%By: Abrothguer
 
 %Rule to concatenate lists.
 conc([],L,L).
