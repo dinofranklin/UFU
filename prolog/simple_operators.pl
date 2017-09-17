@@ -1,3 +1,6 @@
+%Simple operators in prolog
+%By: Abrothguer
+
 :-op(100,xfx,iss).
 :-op(90,fx,fibonacci).
 :-op(90,xf,factorial).
