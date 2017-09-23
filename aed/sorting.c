@@ -448,7 +448,7 @@ void modified_quicksort(int *vet, int b, int e, int s){
     }
 }
 
-//Impletation of indirect Selection sort.
+//Implementation of indirect Selection sort.
 
 int* selectionsort_indirect(int *vet, int n){
     int i, j, m;
