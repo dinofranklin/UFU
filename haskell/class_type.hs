@@ -256,3 +256,47 @@ pop (Stk d s) = s
 top :: Ord a => Stack a -> a
 
 top (Stk d s) = d
+
+--Implementation of Adjacency List and Graph structure
+
+data AdjList a = EL | Adj (a,a) (AdjList a)
+
+instance (Show a) => Show (AdjList a) where
+    show (EL) = "Null"
+    show (Adj p l) = show p ++ "-> " ++ show l
+
+instance (Eq a) => Eq (AdjList a) where
+    EL == EL = True 
+    (Adj p1 l1) == (Adj p2 l2) = (p1==p2 && l1==l2)
+
+data Graph a = EG | Grp a (AdjList a) (Graph a) deriving(Eq)
+
+instance (Show a) => Show (Graph a) where
+    show(EG) = "End"
+    show(Grp d l g) = show d ++ " = " ++ show l ++ "\n" ++ show g
+
+--Makes an empty graph.
+
+make_graph :: Ord a => Graph a
+make_graph = EG
+
+--Insert a node on a graph.
+
+insert_gnode :: Ord a => Graph a -> a -> Graph a
+
+insert_gnode EG d = 
+    Grp d EL EG
+
+insert_gnode (Grp d l g) n = 
+    if(d == n) then (Grp d l g)
+    else Grp d l (insert_gnode g n)
+
+--Inserts an edge on the graph.
+
+insert_edge :: Ord a => Graph a -> a -> a -> a -> Graph a
+
+insert_edge EG _ _ _ = EG
+
+insert_edge (Grp d l g) v1 v2 w = 
+    if(d == v1) then Grp d (Adj (v2,w) l) g
+    else Grp d l (insert_edge g v1 v2 w)
