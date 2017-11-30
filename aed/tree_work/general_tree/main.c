@@ -352,7 +352,7 @@ int menu(){
         printf("[18]. Exit\n");
 
         fgets(buffer, 1000, stdin);
-        if(not get_int(&op)) printf("Stop typing like an autistic!\n");
+        if(not get_int(&op)) printf("Only numbers are accepted!\n");
         else if(op < 1 or op > 18) printf("Your number is not valid!\n");
         else return op;
         
