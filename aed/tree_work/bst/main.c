@@ -199,8 +199,8 @@ void search_aux(BinTree **trees, int *size){
     if(tr < 0) return;
     ans = search_bintree(trees[tr], target);
 
-    if(not ans) printf("The student with age %d is not on the tree!\n");
-    else printf("The student with age %d is in the tree!\n");
+    if(not ans) printf("The student with age %d is not on the tree!\n", target);
+    else printf("The student with age %d is in the tree!\n", target);
     return;
 }
 
