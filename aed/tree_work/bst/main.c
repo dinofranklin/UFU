@@ -359,7 +359,6 @@ void merge_aux(BinTree **trees, int *size){
         return;
     }
 
-    printf("MY TREES ARE %d and %d\n", t1-1, t2-1);
     trees[*size] = merge_bintree(trees[t1-1], trees[t2-1]);
     (*size)++;
     printf("The trees %d and %d are now merged on tree %d!\n", t1, t2, *size);
