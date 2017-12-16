@@ -74,27 +74,6 @@ int main(){
         fgets(buffer, MAXBUFFER, stdin);
     }
 
-/* 
-    AvlTree *t = make_avltree();
-    insert_avl(&t, make_node(1, 5,5,"fodasse")); treeview_avl(t,0); printf("\n");
-    insert_avl(&t, make_node(1, 2,6,"fodasse")); treeview_avl(t,0); printf("\n");
-    insert_avl(&t, make_node(1, 8,3,"fodasse")); treeview_avl(t,0); printf("\n");
-    insert_avl(&t, make_node(1, 1,2,"fodasse")); treeview_avl(t,0); printf("\n");
-    insert_avl(&t, make_node(1, 3,5,"fodasse")); treeview_avl(t,0); printf("\n");
-    insert_avl(&t, make_node(1, 7,5,"fodasse")); treeview_avl(t,0); printf("\n");
-    insert_avl(&t, make_node(1, 10,5,"fodasse")); treeview_avl(t,0); printf("\n");
-    insert_avl(&t, make_node(1, 4,5,"fodasse")); treeview_avl(t,0); printf("\n");
-    insert_avl(&t, make_node(1, 6,5,"fodasse")); treeview_avl(t,0); printf("\n");
-    insert_avl(&t, make_node(1, 9,5,"fodasse")); treeview_avl(t,0); printf("\n");
-    insert_avl(&t, make_node(1, 11,5,"fodasse")); treeview_avl(t,0); printf("\n");
-    insert_avl(&t, make_node(1, 12,5,"fodasse")); treeview_avl(t,0); printf("\n");
-    insert_avl(&t, make_node(1, 13,5,"fodasse")); treeview_avl(t,0); printf("\n");
-
-    printf("ATE AQUI TUDO BEM\n\n\n\n\n");
-    remove_avl(&t, 1); treeview_avl(t,0); printf("\n");
-
- */
-
     return 0;
 }
 
