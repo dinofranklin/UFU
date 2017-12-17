@@ -1,0 +1,25 @@
+24
+0; the wall; 10
+1; winterfell; 5
+2; the pike; 7
+3; dragonstone; 2
+4; king's landing; 8
+5; dorne; 30
+6; bravos; 12
+7; valyria; 1
+8; the shire; 25
+9; rivendell; 17
+10; helm's deep; 30
+11; gondor; 45
+12; mirkwood; 3
+13; lonely mountain; 80
+14; isengard; 200
+15; mordor; 500
+16; helgen; 3
+17; riverwood; 5
+18; whiterun; 20
+19; solitude; 100
+20; riften; 80
+21; windhelm; 10
+22; sovngard; 0
+23; solstheim; 40
