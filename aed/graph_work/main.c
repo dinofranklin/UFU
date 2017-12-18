@@ -75,35 +75,7 @@ int main(){
         printf("Press ENTER to go back to the menu!\n");
         fgets(buffer, MAXBUFFER, stdin);
     }
-/*
-    printf("VAMO COMECAR\n");
-    metro = make_graph(5);
-    print_graph(metro);
-    insert_station(metro, 0,5, "alou");
-    insert_station(metro, 4,5, "alou");
-    insert_station(metro, 2,5, "alou");
-    insert_station(metro, 1,5, "alou");
-    insert_station(metro, 3,5, "alou");
-    print_graph(metro);
-
-    insert_connection(metro, 0, 1, "blue", 90);
-    insert_connection(metro, 0, 2, "blue", 90);
-    insert_connection(metro, 4, 0, "blue", 99);
-    insert_connection(metro, 0, 3, "blue", 90);
-    insert_connection(metro, 4, 3, "blue", 99);
-    print_graph(metro);
-
-    printf("%d on %d = %d\n", 4, 1, verify_connection(metro, 4, 1));    
-    printf("%d on %d = %d\n", 4, 2, verify_connection(metro, 4, 2));
-    printf("t %d %d = %d\n", 4, 2, traveltime_connection(metro, 4, 2));
-    printf("t %d %d = %d\n", 4, 1, traveltime_connection(metro, 4, 1));
-
-    remove_connection(metro, 3, 4);
-    print_graph(metro);
-    remove_station(metro, 0);
-    print_graph(metro);
-
-*/
+    
     free_graph(&metro);
     printf("Goodbye... \n");
     return 0;
