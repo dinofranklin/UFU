@@ -30,7 +30,7 @@ class Automaton(object):
 
         current_states = {self.initial}
         if chain == "":
-            print(self.get_transition(self.initial, '&'))
+            # print(self.get_transition(self.initial, '&'))
             if self.get_transition(self.initial, '&').intersection(self.finals):
                 return True
             return False
@@ -103,15 +103,17 @@ def main():
 def read_automaton():
     """ Le o automato e retorna uma quintupla ou None caso haja erro """
 
-    states = set(input().replace(' ', '').split(','))
-    alphabet = set(input().replace(' ', '').split(','))
-    initial = input()
+    f = open(input("Arquivo: "))
+
+    states = set(f.readline().strip().replace(' ', '').split(','))
+    alphabet = set(f.readline().strip().replace(' ', '').split(','))
+    initial = f.readline().strip().replace(' ', '')
 
     if initial not in states:
         print(f"Estado inicial nao reconhecido: {initial}!")
         return None
 
-    finals = set(input().replace(' ', '').split(','))
+    finals = set(f.readline().strip().replace(' ', '').split(','))
 
     if finals - states:
         print(f"Estado(s) final nao reconhecido: {finals - states}")
@@ -124,7 +126,9 @@ def read_automaton():
 
     while True:
         try:
-            delta = input().replace(' ', '').split(';')
+            delta = f.readline().replace(' ', '').strip().split(';')
+            if delta == [""]:
+                break
         except EOFError:
             break
 
@@ -133,10 +137,10 @@ def read_automaton():
             print(f"Padrao nao reconhecido na funcao {delta}")
             flag = True
         if delta[0] not in states and delta[0] != '@':
-            print(f"Estado nao reconhecido na funcao: {delta[0]}")
+            print(f"Estado nao reconhecido na funcao: '{delta[0]}'")
             flag = True
         if delta[2] not in states and delta[2] != '@':
-            print(f"Estado nao reconhecido na funcao: {delta[2].intersection(states)}")
+            print(f"Estado nao reconhecido na funcao: '{delta[2]}'")
             flag = True
         if delta[1] not in alphabet and delta[1] != '&':
             print(f"Simbolo {delta[1]} nao reconhecido na funcao")
