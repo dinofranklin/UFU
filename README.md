@@ -1,3 +1,3 @@
 # UFU
 
-Homeworks :3
+Homeworks
