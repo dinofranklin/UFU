@@ -103,17 +103,17 @@ def main():
 def read_automaton():
     """ Le o automato e retorna uma quintupla ou None caso haja erro """
 
-    f = open(input("Arquivo: "))
+    autfile = open(input("Arquivo: "))
 
-    states = set(f.readline().strip().replace(' ', '').split(','))
-    alphabet = set(f.readline().strip().replace(' ', '').split(','))
-    initial = f.readline().strip().replace(' ', '')
+    states = set(autfile.readline().strip().replace(' ', '').split(','))
+    alphabet = set(autfile.readline().strip().replace(' ', '').split(','))
+    initial = autfile.readline().strip().replace(' ', '')
 
     if initial not in states:
         print(f"Estado inicial nao reconhecido: {initial}!")
         return None
 
-    finals = set(f.readline().strip().replace(' ', '').split(','))
+    finals = set(autfile.readline().strip().replace(' ', '').split(','))
 
     if finals - states:
         print(f"Estado(s) final nao reconhecido: {finals - states}")
@@ -125,11 +125,8 @@ def read_automaton():
         function[state]['&'] = set()
 
     while True:
-        try:
-            delta = f.readline().replace(' ', '').strip().split(';')
-            if delta == [""]:
-                break
-        except EOFError:
+        delta = autfile.readline().replace(' ', '').strip().split(';')
+        if delta == [""]:
             break
 
         flag = False
