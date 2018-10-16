@@ -95,9 +95,9 @@ def main():
         recognize = automaton.verify_chain(chain)
 
         if recognize:
-            print(f"A cadeia {chain} eh reconhecida pelo automato\n")
+            print(f"A cadeia '{chain}' eh reconhecida pelo automato\n")
         else:
-            print(f"A cadeia {chain} nao eh reconhecida pelo automato\n")
+            print(f"A cadeia '{chain}' nao eh reconhecida pelo automato\n")
 
 
 def read_automaton():

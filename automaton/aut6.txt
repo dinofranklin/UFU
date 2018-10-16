@@ -1,0 +1,11 @@
+P,Q,R,Q1,R1,R2
+a
+P
+Q,R
+P;&;Q
+P;&;R
+Q;a;Q1
+Q1;a;Q
+R;a;R1
+R1;a;R2
+R2;a;R
