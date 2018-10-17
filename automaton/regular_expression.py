@@ -111,13 +111,9 @@ class RegularExpression(object):
         resulting_function.update(first_aut.function)
         resulting_function.update(second_aut.function)
 
-        print(f"esse lixo eh {first_aut.finals}")
-
         finals_copy = first_aut.finals.copy()
         for final in finals_copy:
-            print(f"esse lixo eh {first_aut.finals}")
             resulting_function[final]['&'].add(second_aut.initial)
-            print(f"esse lixo eh {first_aut.finals}")
 
         return Automaton(states, alphabet, resulting_function, finals, initial)
 
