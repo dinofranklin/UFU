@@ -1,5 +1,5 @@
 """
-Trabalho de LFA, criacao de uma classe RegularExpression que implementa uma expresão regular
+Trabalho de LFA, criacao de uma classe RegularExpression que implementa uma expressao regular
 e converte a mesma para seu respectivo automato
 
 Consideracoes:
@@ -69,23 +69,57 @@ class RegularExpression(object):
         while stack != []:
             postfix.append(stack.pop())
 
-        print(f"Postfix is {postfix}")
+        # print(f"Postfix is {postfix}")
         return postfix
 
     def union_to_automaton(self, first_aut, second_aut):
         """ Converte uma expressao de uniao em seu respectivo automato """
 
+        global CSTE
+        final_state = 'Q'+str(CSTE)
+        finals = {final_state}
+        CSTE += 1
+        initial = 'Q'+str(CSTE)
+        CSTE += 1
+        states = first_aut.states.union(second_aut.states).union({initial, final_state})
+        alphabet = first_aut.alphabet.union(second_aut.alphabet)
+
         resulting_function = {}
         resulting_function.update(first_aut.function)
         resulting_function.update(second_aut.function)
 
+        resulting_function[initial] = {'&': {initial, first_aut.initial, second_aut.initial}}
+        resulting_function[final_state] = {'&': finals}
+
+        for final in first_aut.finals.union(second_aut.finals):
+            resulting_function[final]['&'].add(final_state)
+
+        # print(f"resulting_function = {resulting_function}")
+
+        return Automaton(states, alphabet, resulting_function, finals, initial)
 
 
-
-    def concatenation_to_automaton(self, head_aut, tail_aut):
+    def concatenation_to_automaton(self, first_aut, second_aut):
         """ Converte uma expressao de concatenacao em seu respectivo automato """
 
+        states = first_aut.states.union(second_aut.states)
+        finals = second_aut.finals
+        initial = first_aut.initial
+        alphabet = first_aut.alphabet.union(second_aut.alphabet)
 
+        resulting_function = {}
+        resulting_function.update(first_aut.function)
+        resulting_function.update(second_aut.function)
+
+        print(f"esse lixo eh {first_aut.finals}")
+
+        finals_copy = first_aut.finals.copy()
+        for final in finals_copy:
+            print(f"esse lixo eh {first_aut.finals}")
+            resulting_function[final]['&'].add(second_aut.initial)
+            print(f"esse lixo eh {first_aut.finals}")
+
+        return Automaton(states, alphabet, resulting_function, finals, initial)
 
     def create_expression_tree(self):
         """ Cria uma arvore binaria a partir da expressao posfixa """
@@ -118,15 +152,20 @@ class RegularExpression(object):
         if current_node is None:
             current_node = self.expression_tree
 
-        if current_node.get_left_child() == None and current_node.get_right_child() == None:
-            state = 'Q'+CSTE
-            CSTE += 1
-            final = 'Q'+CSTE
-            CSTE += 1
-            return Automaton({state, final}, current_node.get_value(), {state: {'&': {state}} {current_node.get_value(): {final}}}, {final}, state)
+        # print(f"Current node is {current_node.get_value()}")
 
-        left_aut = create_automaton(current_node.get_left_child())
-        right_aut = create_automaton(current_node.get_right_child())
+        if current_node.get_left_child() == None and current_node.get_right_child() == None:
+            global CSTE
+            state = 'Q'+str(CSTE)
+            CSTE += 1
+            final = 'Q'+str(CSTE)
+            CSTE += 1
+            function = {state: {'&': {state}, current_node.get_value(): {final}}, final: {'&': {final}}}
+            aut = Automaton({state, final}, {current_node.get_value()}, function, {final}, state)
+            return aut
+
+        left_aut = self.create_automaton(current_node.get_left_child())
+        right_aut = self.create_automaton(current_node.get_right_child())
 
         if current_node.get_value() == '.':
             return self.concatenation_to_automaton(left_aut, right_aut)
@@ -148,6 +187,7 @@ def main():
         try:
             regex = RegularExpression(expression)
             nfa_epsilon = regex.create_automaton()
+            nfa_epsilon.print_automaton()
         except ValueError:
             print("Expressao regular vazia")
 
