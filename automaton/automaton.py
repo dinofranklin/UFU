@@ -18,12 +18,56 @@ class Automaton(object):
         self.function = function
         self.finals = finals
         self.initial = initial
+        self.epsilon_transitions = {}
 
-        # print(f" States:{self.states}")
-        # print(f" Alpha:{self.alphabet}")
-        # print(f" Finals:{self.finals}")
-        # print(f" Initial:{self.initial}")
-        # print(f" Function:{self.function}")
+        self.calculate_epsilon()
+        # print(f"Epsilon Transitions = {self.epsilon_transitions}")
+
+    def print_automaton(self):
+        """ Exibe o automato """
+
+        print("\nAutomato:\n")
+        print(f"Alfabeto: {self.alphabet}")
+        print(f"Estados: {self.states}")
+        print(f"Estado Inicial: {self.initial}")
+        print(f"Estados Finais: {self.finals}")
+        print(f"Funcao de transicao: {self.function}\n")
+
+    def calculate_epsilon(self):
+        """ Calcula o Epsilon-fecho para cada estado do automato """
+
+        visited = {}
+        calculated = {}
+        for state in self.states:
+            self.epsilon_transitions[state] = self.function[state]['&']
+            visited[state] = False
+            calculated[state] = False
+
+        for state in self.states:
+            if not calculated[state]:
+                self.calculate_epsilon_transition(state, calculated, visited)
+
+
+    def calculate_epsilon_transition(self, state, calculated, visited):
+        """ Calcula o Epsilon-fecho para um estado do automato """
+
+        if calculated[state]:
+            return
+        if visited[state]:
+            return
+
+        visited[state] = True
+        natural_closure = self.function[state]['&']
+
+        if natural_closure == []:
+            calculated[state] = True
+            return
+
+        for ep_state in natural_closure:
+            self.calculate_epsilon_transition(ep_state, calculated, visited)
+            self.epsilon_transitions[state] = self.epsilon_transitions[state].union(
+                self.epsilon_transitions[ep_state])
+
 
     def verify_chain(self, chain, verbose=False):
         """ Faz a verificacao de uma dada cadeia """
@@ -31,7 +75,7 @@ class Automaton(object):
         current_states = {self.initial}
         if chain == "":
             # print(self.get_transition(self.initial, '&'))
-            if self.get_transition(self.initial, '&').intersection(self.finals):
+            if self.epsilon_transitions[self.initial].intersection(self.finals):
                 return True
             return False
 
@@ -60,23 +104,17 @@ class Automaton(object):
             return True
         return False
 
-    def get_transition(self, state, symbol, visited=[]):  # pylint: disable=W0102
+    def get_transition(self, state, symbol):
         """ Calcula o novo estado, dado o estado atual e o simbolo lido """
 
-        natural_states = self.function[state].get(symbol)
-        epsilon_states = self.function[state].get("&")
         generated_states = set()
 
-        if visited == []:
-            visited.append(state)
-        for ep_state in epsilon_states:
-            if ep_state not in visited:
-                generated_states = generated_states.union(
-                    self.get_transition(ep_state, symbol, visited))
-
-        if natural_states is None:
-            return generated_states
-        return natural_states.union(generated_states)
+        for ep_state in self.epsilon_transitions[state]:
+            new_states = self.function[ep_state].get(symbol)
+            if new_states is None:
+                continue
+            generated_states = generated_states.union(new_states)
+        return generated_states
 
 
 def main():
@@ -84,6 +122,7 @@ def main():
 
     data = read_automaton()
     automaton = Automaton(data[0], data[1], data[2], data[3], data[4])
+    automaton.print_automaton()
 
     while True:
         print("Digite uma cadeia: ")
@@ -105,15 +144,17 @@ def read_automaton():
 
     autfile = open(input("Arquivo: "))
 
-    states = set(autfile.readline().strip().replace(' ', '').split(','))
-    alphabet = set(autfile.readline().strip().replace(' ', '').split(','))
+    states = set(autfile.readline().strip().replace(' ', '').split(';'))
+    states = states - {'@'}
+    alphabet = set(autfile.readline().strip().replace(' ', '').split(';'))
     initial = autfile.readline().strip().replace(' ', '')
 
     if initial not in states:
         print(f"Estado inicial nao reconhecido: {initial}!")
         return None
 
-    finals = set(autfile.readline().strip().replace(' ', '').split(','))
+    finals = set(autfile.readline().strip().replace(' ', '').split(';'))
+    finals = finals - {'@'}
 
     if finals - states:
         print(f"Estado(s) final nao reconhecido: {finals - states}")
@@ -122,7 +163,7 @@ def read_automaton():
     function = {}
     for state in states:
         function[state] = {}
-        function[state]['&'] = set()
+        function[state]['&'] = {state}
 
     while True:
         delta = autfile.readline().replace(' ', '').strip().split(';')
@@ -133,7 +174,7 @@ def read_automaton():
         if len(delta) < 3:
             print(f"Padrao nao reconhecido na funcao {delta}")
             flag = True
-        if delta[0] not in states and delta[0] != '@':
+        if delta[0] not in states:
             print(f"Estado nao reconhecido na funcao: '{delta[0]}'")
             flag = True
         if delta[2] not in states and delta[2] != '@':
@@ -145,9 +186,9 @@ def read_automaton():
         if flag:
             return None
 
-        if function[delta[0]].get(delta[1]) is not None:
+        if delta[2] != '@' and function[delta[0]].get(delta[1]) is not None:
             function[delta[0]][delta[1]] = function[delta[0]][delta[1]].union(set([delta[2]]))
-        else:
+        elif delta[2] != '@':
             function[delta[0]][delta[1]] = set([delta[2]])
 
         # print(f"Para {delta[0]} com {delta[1]} = {function[delta[0]][delta[1]]}")
