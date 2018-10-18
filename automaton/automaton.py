@@ -46,6 +46,8 @@ class Automaton(object):
         for state in self.states:
             if not calculated[state]:
                 self.calculate_epsilon_transition(state, calculated, visited)
+                for state in visited:
+                    visited[state] = False
 
 
     def calculate_epsilon_transition(self, state, calculated, visited):
@@ -59,7 +61,7 @@ class Automaton(object):
         visited[state] = True
         natural_closure = self.function[state]['&']
 
-        if natural_closure == []:
+        if natural_closure == [state]:
             calculated[state] = True
             return
 
