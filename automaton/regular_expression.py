@@ -14,6 +14,7 @@ from binary_tree import BinaryTree
 PREC = defaultdict(int)
 PREC['.'] = 2
 PREC['+'] = 1
+PREC['*'] = 3
 CSTE = 0
 
 class RegularExpression(object):
@@ -54,6 +55,12 @@ class RegularExpression(object):
                     postfix.append(stack.pop())
                 stack.append(element)
 
+            elif element == '*':
+                previous = False
+                while stack != [] and PREC[element] <= PREC[stack[-1]]:
+                    postfix.append(stack.pop())
+                stack.append(element)
+
             else:
                 if previous:
                     while stack != [] and PREC['.'] <= PREC[stack[-1]]:
@@ -69,7 +76,7 @@ class RegularExpression(object):
         while stack != []:
             postfix.append(stack.pop())
 
-        # print(f"Postfix is {postfix}")
+        print(f"Postfix is {postfix}")
         return postfix
 
     def union_to_automaton(self, first_aut, second_aut):
@@ -98,6 +105,35 @@ class RegularExpression(object):
 
         return Automaton(states, alphabet, resulting_function, finals, initial)
 
+    def closure_to_automaton(self, automaton):
+        """ Converte o fechamento para um automato """
+
+        print("I have this dude: ")
+        automaton.print_automaton()
+
+        global CSTE
+        final_state = 'Q'+str(CSTE)
+        finals = {final_state}
+        CSTE += 1
+        initial = 'Q'+str(CSTE)
+        CSTE += 1
+        states = automaton.states.union({initial, final_state})
+        alphabet = automaton.alphabet
+
+        resulting_function = {}
+        resulting_function.update(automaton.function)
+
+        resulting_function[initial] = {'&': {initial, automaton.initial, final_state}}
+        resulting_function[final_state] = {'&': finals}
+        
+        finals_copy = automaton.finals.copy()
+        for final in finals_copy:
+            resulting_function[final]['&'].add(automaton.initial)
+            resulting_function[final]['&'].add(final_state)
+
+        # print(f"resulting_function = {resulting_function}")
+
+        return Automaton(states, alphabet, resulting_function, finals, initial)
 
     def concatenation_to_automaton(self, first_aut, second_aut):
         """ Converte uma expressao de concatenacao em seu respectivo automato """
@@ -117,6 +153,7 @@ class RegularExpression(object):
 
         return Automaton(states, alphabet, resulting_function, finals, initial)
 
+    
     def create_expression_tree(self):
         """ Cria uma arvore binaria a partir da expressao posfixa """
 
@@ -136,11 +173,22 @@ class RegularExpression(object):
                 bin_tree.set_right_child(right)
                 stack.append(bin_tree)
 
+            elif value == '*':
+
+                right = stack.pop()
+                bin_tree = BinaryTree(value)
+                bin_tree.set_right_child(right)
+                stack.append(bin_tree)
+
             else:
                 stack.append(value)
 
+        input()
+
         self.expression_tree = stack[0]
         self.expression_tree.print_treeview()
+
+        input()
 
     def create_automaton(self, current_node=None):
         """ Cria o automato que corresponde a expressao """
@@ -160,14 +208,22 @@ class RegularExpression(object):
             aut = Automaton({state, final}, {current_node.get_value()}, function, {final}, state)
             return aut
 
-        left_aut = self.create_automaton(current_node.get_left_child())
-        right_aut = self.create_automaton(current_node.get_right_child())
+        if current_node.get_left_child() is not None:
+            left_aut = self.create_automaton(current_node.get_left_child())
+        if current_node.get_right_child() is not None:
+            right_aut = self.create_automaton(current_node.get_right_child())
 
         if current_node.get_value() == '.':
             return self.concatenation_to_automaton(left_aut, right_aut)
 
         if current_node.get_value() == '+':
             return self.union_to_automaton(left_aut, right_aut)
+
+        # O valor eh *
+        if current_node.get_left_child() is not None:
+            return self.closure_to_automaton(left_aut)
+        else:
+            return self.closure_to_automaton(right_aut)
 
 
 def main():
