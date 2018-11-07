@@ -7,8 +7,8 @@ Consideracoes:
     - & Denota a palavra vazia epsilon
 """
 
-from automaton import Automaton
 from collections import defaultdict
+from automaton import Automaton
 from binary_tree import BinaryTree
 
 PREC = defaultdict(int)
@@ -142,7 +142,7 @@ class RegularExpression(object):
         self.expression_tree = stack[0]
         self.expression_tree.print_treeview()
 
-    def create_automaton(self, current_node = None):
+    def create_automaton(self, current_node=None):
         """ Cria o automato que corresponde a expressao """
 
         if current_node is None:
@@ -150,7 +150,7 @@ class RegularExpression(object):
 
         # print(f"Current node is {current_node.get_value()}")
 
-        if current_node.get_left_child() == None and current_node.get_right_child() == None:
+        if current_node.get_left_child() is None and current_node.get_right_child() is None:
             global CSTE
             state = 'Q'+str(CSTE)
             CSTE += 1
@@ -183,7 +183,13 @@ def main():
         try:
             regex = RegularExpression(expression)
             nfa_epsilon = regex.create_automaton()
+
             nfa_epsilon.print_automaton()
+
+            filename = 'newaut.txt'
+            print(f"Salvando automato no arquivo '{filename}'")
+            nfa_epsilon.print_to_file()
+            print(f"Automato salvo!\n")
         except ValueError:
             print("Expressao regular vazia")
 

@@ -33,6 +33,24 @@ class Automaton(object):
         print(f"Estados Finais: {self.finals}")
         print(f"Funcao de transicao: {self.function}\n")
 
+    def print_to_file(self, filename='newaut.txt'):
+        """ Imprime o automato em um arquivo """
+
+        with open(filename, 'w') as aut_file:
+
+            aut_file.write(';'.join(self.states) + '\n')
+            aut_file.write(';'.join(self.alphabet) + '\n')
+            aut_file.write(self.initial + '\n')
+            aut_file.write(';'.join(self.finals) + '\n')
+
+            for key in self.function:
+
+                for value in self.function[key]:
+
+                    for state in self.function[key][value]:
+
+                        aut_file.write(key + ';' + value + ';' + state + '\n')
+
     def calculate_epsilon(self):
         """ Calcula o Epsilon-fecho para cada estado do automato """
 
