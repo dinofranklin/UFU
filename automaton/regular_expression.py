@@ -108,8 +108,8 @@ class RegularExpression(object):
     def closure_to_automaton(self, automaton):
         """ Converte o fechamento para um automato """
 
-        print("I have this dude: ")
-        automaton.print_automaton()
+        # print("I have this dude: ")
+        # automaton.print_automaton()
 
         global CSTE
         final_state = 'Q'+str(CSTE)
