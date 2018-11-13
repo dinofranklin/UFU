@@ -15,7 +15,6 @@ PREC = defaultdict(int)
 PREC['.'] = 2
 PREC['+'] = 1
 PREC['*'] = 3
-CSTE = 0
 
 class RegularExpression(object):
     """ Implementa uma expressao regular """
@@ -23,12 +22,20 @@ class RegularExpression(object):
     def __init__(self, expression):
 
         self.expression = expression.replace(' ', '')
+        self.counter = 0
         if self.expression == "":
             raise ValueError("Expressao Vazia")
         self.postfix_expression = self.infix_to_postfix()
-        self.automaton = None
         self.expression_tree = None
         self.create_expression_tree()
+
+
+    def create_state(self):
+        """ Cria um estado baseado no counter da classe """
+
+        state = 'Q'+str(self.counter)
+        self.counter += 1
+        return state
 
     def infix_to_postfix(self):
         """ Converte uma expressao infixa para uma posfixa """
@@ -49,13 +56,7 @@ class RegularExpression(object):
                         break
                     postfix.append(stack_value)
 
-            elif element in '.+':
-                previous = False
-                while stack != [] and PREC[element] <= PREC[stack[-1]]:
-                    postfix.append(stack.pop())
-                stack.append(element)
-
-            elif element == '*':
+            elif element in '.+*':
                 previous = False
                 while stack != [] and PREC[element] <= PREC[stack[-1]]:
                     postfix.append(stack.pop())
@@ -76,18 +77,15 @@ class RegularExpression(object):
         while stack != []:
             postfix.append(stack.pop())
 
-        print(f"Postfix is {postfix}")
+        # print(f"Postfix is {postfix}")
         return postfix
 
     def union_to_automaton(self, first_aut, second_aut):
         """ Converte uma expressao de uniao em seu respectivo automato """
 
-        global CSTE
-        final_state = 'Q'+str(CSTE)
+        final_state = self.create_state()
         finals = {final_state}
-        CSTE += 1
-        initial = 'Q'+str(CSTE)
-        CSTE += 1
+        initial = self.create_state()
         states = first_aut.states.union(second_aut.states).union({initial, final_state})
         alphabet = first_aut.alphabet.union(second_aut.alphabet)
 
@@ -108,15 +106,9 @@ class RegularExpression(object):
     def closure_to_automaton(self, automaton):
         """ Converte o fechamento para um automato """
 
-        # print("I have this dude: ")
-        # automaton.print_automaton()
-
-        global CSTE
-        final_state = 'Q'+str(CSTE)
+        final_state = self.create_state()
         finals = {final_state}
-        CSTE += 1
-        initial = 'Q'+str(CSTE)
-        CSTE += 1
+        initial = self.create_state()
         states = automaton.states.union({initial, final_state})
         alphabet = automaton.alphabet
 
@@ -125,7 +117,7 @@ class RegularExpression(object):
 
         resulting_function[initial] = {'&': {initial, automaton.initial, final_state}}
         resulting_function[final_state] = {'&': finals}
-        
+
         finals_copy = automaton.finals.copy()
         for final in finals_copy:
             resulting_function[final]['&'].add(automaton.initial)
@@ -135,7 +127,7 @@ class RegularExpression(object):
 
         return Automaton(states, alphabet, resulting_function, finals, initial)
 
-    def concatenation_to_automaton(self, first_aut, second_aut):
+    def concatenation_to_automaton(self, first_aut, second_aut): #pylint: disable=R0201
         """ Converte uma expressao de concatenacao em seu respectivo automato """
 
         states = first_aut.states.union(second_aut.states)
@@ -153,7 +145,7 @@ class RegularExpression(object):
 
         return Automaton(states, alphabet, resulting_function, finals, initial)
 
-    
+
     def create_expression_tree(self):
         """ Cria uma arvore binaria a partir da expressao posfixa """
 
@@ -183,12 +175,8 @@ class RegularExpression(object):
             else:
                 stack.append(value)
 
-        input()
-
         self.expression_tree = stack[0]
         self.expression_tree.print_treeview()
-
-        input()
 
     def create_automaton(self, current_node=None):
         """ Cria o automato que corresponde a expressao """
@@ -199,12 +187,10 @@ class RegularExpression(object):
         # print(f"Current node is {current_node.get_value()}")
 
         if current_node.get_left_child() is None and current_node.get_right_child() is None:
-            global CSTE
-            state = 'Q'+str(CSTE)
-            CSTE += 1
-            final = 'Q'+str(CSTE)
-            CSTE += 1
-            function = {state: {'&': {state}, current_node.get_value(): {final}}, final: {'&': {final}}}
+            state = self.create_state()
+            final = self.create_state()
+            function = {state: {'&': {state}, current_node.get_value(): {final}},
+                        final: {'&': {final}}}
             aut = Automaton({state, final}, {current_node.get_value()}, function, {final}, state)
             return aut
 
@@ -222,8 +208,7 @@ class RegularExpression(object):
         # O valor eh *
         if current_node.get_left_child() is not None:
             return self.closure_to_automaton(left_aut)
-        else:
-            return self.closure_to_automaton(right_aut)
+        return self.closure_to_automaton(right_aut)
 
 
 def main():
@@ -246,6 +231,22 @@ def main():
             print(f"Salvando automato no arquivo '{filename}'")
             nfa_epsilon.print_to_file()
             print(f"Automato salvo!\n")
+
+            while True:
+                print("Digite uma cadeia: ")
+                try:
+                    chain = input()
+                except EOFError:
+                    break
+
+                recognize = nfa_epsilon.verify_chain(chain)
+
+                if recognize:
+                    print(f"A cadeia '{chain}' eh reconhecida pelo automato\n")
+                else:
+                    print(f"A cadeia '{chain}' nao eh reconhecida pelo automato\n")
+
+
         except ValueError:
             print("Expressao regular vazia")
 
