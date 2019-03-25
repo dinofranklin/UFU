@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import heapq
 
 MAX_DEPTH = 10
@@ -10,24 +12,34 @@ class CountryMap():
         self.__city_relation = {}
         self.__graph = []
 
+        #Debug
+        self.__reverse_relation = []
+
     def print_dict(self):
         print(self.__graph)
 
     def add_city(self, name):
         if self.__city_relation.get(name) is None:
             self.__city_relation[name] = self.cities
+            self.__reverse_relation.append(name)
             self.__graph.append([])
             self.cities += 1
         # print(self.__city_relation)
 
     def add_connection(self, city_1, city_2, cost):
         self.__graph[self.__city_relation[city_1]].append( (self.__city_relation[city_2], cost) )
+        self.__graph[self.__city_relation[city_2]].append( (self.__city_relation[city_1], cost) )
+
+    def reverse(self, cities):
+        return [self.__reverse_relation[city] for city in cities]
 
     def depth_search(self, origin, target):
 
         visited = [False]*self.cities
 
-        return self.__dfs(self.__city_relation[origin], self.__city_relation[target], visited)
+        result = self.__dfs(self.__city_relation[origin], self.__city_relation[target], visited)
+        result[0].reverse()
+        return (result[0], result[1])
 
     def __dfs(self, origin, target, visited):
 
@@ -76,19 +88,23 @@ class CountryMap():
         target = self.__city_relation[target]
 
         queue = []
+        visited = [False]*self.cities
         queue.append(([origin],0))
         result = None
 
         while True:
 
             path, total_cost = queue[0]
-            print("path = {}; cost = {}".format(path,  total_cost))
+            # print("path = {}; cost = {}".format([self.__reverse_relation[city] for city in path], total_cost))
             current = path[-1]
-
-            if current == target:
-                result = queue[0]
-                break
             queue.remove(queue[0])
+
+            if visited[current]:
+                continue
+            if current == target:
+                result = (path, total_cost)
+                break
+            visited[current] = True
 
             for node, cost in self.__graph[current]:
 
@@ -102,6 +118,7 @@ class CountryMap():
 
         priority_q = [(0, [self.__city_relation[ origin ]] )]
         result = None
+        target = self.__city_relation[target]
 
         while True:
             total_cost, path = heapq.heappop(priority_q)
@@ -129,8 +146,11 @@ def main():
                           [0].Largura\n
                           [1].Profundidade\n
                           [2].Custo Uniforme\n
-                          [3].Busca Iterativa\n""")
+                          [3].Busca Iterativa\n
+                          [4].Sair\n\n""")
         choice = int(choice)
+        if choice not in [0, 1, 2, 3]:
+            break
 
         city_1 = input("Cidade de origem: ")
         city_2 = input("Cidade de destino: ")
@@ -140,18 +160,18 @@ def main():
 
         if choice == 0:
             result = country.breadth_search(city_1, city_2)
-            print(result)
         elif choice == 1:
             result = country.depth_search(city_1, city_2)
-            print(result)
         elif choice == 2:
             result = country.uniform_search(city_1, city_2)
-            print(result)
-        elif choice == 3:
-            result = country.iterative_search(city_1, city_2, depth)
-            print(result)
         else:
-            break
+            result = country.iterative_search(city_1, city_2, depth)
+
+        if result is None:
+            print("\nSem caminho!\n\n")
+        else:
+            print(f"\nCaminho: {country.reverse(result[0])}")
+            print(f"Custo total: {result[1]}\n\n")
 
 def read_file():
 
@@ -179,7 +199,7 @@ def read_file():
 
 
     print("Feito...\n")
-    country.print_dict()
+    # country.print_dict()
     return country
 
 if __name__ == "__main__":
