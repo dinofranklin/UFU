@@ -58,6 +58,10 @@ class CountryMap():
 
         return None
 
+    # a ordem dos estados/ações aparece invertida
+    # - falta reverter (como na busca em profundidade)
+    # 
+    
     def iterative_search(self, origin, target, max_depth=MAX_DEPTH):
 
         for depth in range(max_depth+1):
